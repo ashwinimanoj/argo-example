@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: diamond-
+spec:
+  entrypoint: diamond
+  
+  templates:
+  - name: hello-world
+    container:
+      image: docker/whalesay
+      command: [cowsay]
+      args: ["hello world"] 
+  - name: how-are-you
+    container:
+      image: docker/whalesay
+      command: [cowsay]
+      args: ["how are you"]
+  - name: see-you
+    container:
+      image: docker/whalesay
+      command: [cowsay]
+      args: ["good to see you"]
+  - name: goodbye
+    container:
+      image: docker/whalesay
+      command: [cowsay]
+      args: ["good bye!"]
+
+  - name: diamond
+    dag:
+      tasks: 
+        - name: A 
+          template: hello-world
+        - name: B
+          template: how-are-you
+          dependencies: [A]
+        - name: C
+          template: see-you
+          dependencies: [A]
+        - name: D
+          template: goodbye
+          dependencies: [B, C]
