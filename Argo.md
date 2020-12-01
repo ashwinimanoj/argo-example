@@ -18,6 +18,7 @@ http://localhost:2746
 
 #### Sample 
 ``` argo submit -n argo --watch https://raw.githubusercontent.com/argoproj/argo/master/examples/hello-world.yaml
+kubectl create -n argo -f 001_helloworld.yaml
 argo list -n argo
 argo get -n argo @latest
 argo logs -n argo @latest

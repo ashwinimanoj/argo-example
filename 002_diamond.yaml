@@ -7,37 +7,41 @@ spec:
   
   templates:
   - name: hello-world
+    inputs:
+      parameters:
+      - name: script
     container:
       image: docker/whalesay
       command: [cowsay]
-      args: ["hello world"] 
-  - name: how-are-you
-    container:
-      image: docker/whalesay
-      command: [cowsay]
-      args: ["how are you"]
-  - name: see-you
-    container:
-      image: docker/whalesay
-      command: [cowsay]
-      args: ["good to see you"]
-  - name: goodbye
-    container:
-      image: docker/whalesay
-      command: [cowsay]
-      args: ["good bye!"]
+      args: ["{{inputs.parameters.script}}"]
 
   - name: diamond
     dag:
       tasks: 
         - name: A 
           template: hello-world
+          arguments:
+              parameters:
+                - name: script
+                  value: "how are you"
         - name: B
-          template: how-are-you
+          template: hello-world
+          arguments:
+              parameters:
+                - name: script
+                  value: "good to see you!"
           dependencies: [A]
         - name: C
-          template: see-you
+          template: hello-world
+          arguments:
+              parameters:
+                - name: script
+                  value: "take care"
           dependencies: [A]
         - name: D
-          template: goodbye
+          template: hello-world
+          arguments:
+              parameters:
+                - name: script
+                  value: "good bye!"
           dependencies: [B, C]
