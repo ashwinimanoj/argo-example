@@ -3,7 +3,7 @@ kind: CronWorkflow
 metadata:
   name: hello-world
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "*/10 * * * *"
   timezone: "Asia/Kolkata" 
   concurrencyPolicy: "Replace"   
   successfulJobsHistoryLimit: 4   
