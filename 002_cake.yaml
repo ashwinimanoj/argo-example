@@ -1,0 +1,88 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: cake-
+spec:
+  entrypoint: cake
+  
+  templates:
+  - name: whalesay
+    inputs:
+      parameters:
+      - name: script
+    container:
+      image: docker/whalesay
+      command: [cowsay]
+      args: ["{{inputs.parameters.script}}"]
+
+  - name: cake
+    dag:
+      tasks: 
+        - name: get-bowl
+          template: whalesay
+          arguments:
+              parameters:
+                - name: script
+                  value: "Get a bowl"
+        - name: add-eggs
+          template: whalesay
+          arguments:
+              parameters:
+                - name: script
+                  value: "Add eggs to bowl"
+          dependencies: [get-bowl]
+        - name: add-oil
+          template: whalesay
+          arguments:
+              parameters:
+                - name: script
+                  value: "Add oil to bowl"
+          dependencies: [get-bowl]
+        - name: add-flour
+          template: whalesay
+          arguments:
+              parameters:
+                - name: script
+                  value: "Add flour to bowl"
+          dependencies: [get-bowl]
+        - name: add-cocoa
+          template: whalesay
+          arguments:
+              parameters:
+                - name: script
+                  value: "Add cocoa to bowl"
+          dependencies: [get-bowl]
+        - name: mix-ingredients
+          template: whalesay
+          arguments:
+              parameters:
+                - name: script
+                  value: "Mix ingredients"
+          dependencies: [add-eggs,add-oil,add-flour,add-cocoa]
+        - name: prepare-pan
+          template: whalesay
+          arguments:
+              parameters:
+                - name: script
+                  value: "Prepare cake pan"
+        - name: add-cake-batter-in-pan
+          template: whalesay
+          arguments:
+              parameters:
+                - name: script
+                  value: "Put cake batter in pan"
+          dependencies: [mix-ingredients,prepare-pan]
+        - name: put-pan-in-oven
+          template: whalesay
+          arguments:
+              parameters:
+                - name: script
+                  value: "Put cake pan in oven"
+          dependencies: [cake-batter]
+        - name: serve-cake
+          template: whalesay
+          arguments:
+              parameters:
+                - name: script
+                  value: "Your cake is ready!"
+          dependencies: [in-oven]
